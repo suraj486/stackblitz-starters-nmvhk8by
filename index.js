@@ -1,22 +1,22 @@
 const express = require('express');
 const app = express();
 const PORT = 5050;
-var cors = require('cors');
-const nodemailer = require('nodemailer'); // Import nodemailer
-const { WebContainer } = '@webcontainer/api';
+const cors = require('cors');
+const nodemailer = require('nodemailer');
+require('dotenv').config(); // Load environment variables
 
 // In-memory logs
 const logs = [];
 app.use(cors());
 
-// SMTP transporter setup using the provided credentials
+// SMTP transporter setup using environment variables
 const transporter = nodemailer.createTransport({
-  host: 'email-smtp.us-west-1.amazonaws.com',
-  port: 587,
+  host: process.env.SMTP_HOST,
+  port: process.env.SMTP_AUTH_PORT,
   secure: false, // Use TLS
   auth: {
-    user: 'AKIA5D5RI7',
-    pass: 'BNs5T0T',
+    user: process.env.SMTP_AUTH_USER,
+    pass: process.env.SMTP_AUTH_PASSWORD,
   },
 });
 
@@ -39,8 +39,8 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // Send email function
 const sendEmail = (subject, text) => {
   const mailOptions = {
-    from: '"Signdesk Webhook" <no-reply@signdesk.com>', // sender address
-    to: 'suraj.g@signdesk.com', // recipient email
+    from: '"Signdesk CLM Webhook" <no-reply@signdesk.com>', // sender address
+    to: 'vishal.g@signdesk.com', // recipient email
     subject: subject,
     text: text, // email body
   };
